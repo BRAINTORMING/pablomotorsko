@@ -1,0 +1,136 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300..900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Design tokens: colors are RGB channels named by purpose, one set per theme.
+   Both sets define the same names; components never write a color by hand. */
+:root {
+  color-scheme: light;
+  --color-canvas: 250 250 250; /* page background */
+  --color-surface: 255 255 255; /* cards, inputs, menus */
+  --color-sunken: 245 245 245; /* quiet fills */
+  --color-fg: 23 23 23; /* main text */
+  --color-muted: 115 115 115; /* secondary text */
+  --color-line: 229 229 229; /* borders */
+  --color-action: 17 45 90; /* primary action and active state (dealer navy) */
+  --color-action-hover: 11 30 62;
+  --color-on-action: 255 255 255; /* text on top of the action color */
+  --color-brand: 12 22 45; /* hero, header, banners, footer */
+  --color-on-brand: 255 255 255;
+  --color-info: 37 99 235; /* "por llegar" and focus rings */
+  --color-success: 22 163 74;
+  --color-warning: 217 119 6;
+  --color-amber-intense: 245 158 11;
+  --color-danger: 220 38 38;
+  --noise-opacity: 0; /* fine grain: off, this is a commercial page */
+  --cloud-opacity: 0; /* large soft mottling: off */
+  --glow-opacity: 0; /* soft light pools in the corners: off */
+}
+
+.dark {
+  color-scheme: dark;
+  --color-canvas: 10 10 10;
+  --color-surface: 20 20 20;
+  --color-sunken: 28 28 28;
+  --color-fg: 237 237 237;
+  --color-muted: 150 150 150;
+  --color-line: 42 42 42;
+  --color-action: 237 237 237;
+  --color-action-hover: 212 212 212;
+  --color-on-action: 10 10 10;
+  --color-brand: 8 14 30;
+  --color-on-brand: 255 255 255;
+  --color-info: 96 165 250;
+  --color-success: 74 222 128;
+  --color-warning: 251 191 36;
+  --color-amber-intense: 245 158 11;
+  --color-danger: 248 113 113;
+  --noise-opacity: 0;
+  --cloud-opacity: 0;
+  --glow-opacity: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+section[id] {
+  scroll-margin-top: 4.5rem;
+}
+::selection {
+  background: rgb(var(--color-info) / 0.3);
+}
+
+body {
+  @apply font-sans antialiased bg-canvas text-fg;
+}
+
+/* Hero photo with feathered edges: two linear masks (horizontal x vertical) are intersected, so every
+   side dissolves into the hero background and no hard border or color difference is visible. */
+.hero-photo {
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0%, #000 32%, #000 68%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, #000 22%, #000 72%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent 0%, #000 32%, #000 68%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, #000 22%, #000 72%, transparent 100%);
+  mask-composite: intersect;
+}
+@media (max-width: 1023px) {
+  .hero-photo {
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 30%, #000 60%, transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0%, #000 30%, #000 60%, transparent 100%);
+  }
+}
+
+/* Organic surface in three static layers, all drawn with SVG or gradients: no image files, no animation.
+   1. html::before  two soft light pools in opposite corners (depth, like light falling on paper).
+   2. body::before  large soft clouds (very low frequency, stretched a little) so the surface is uneven and natural.
+   3. body::after   fine grain (four octaves) tiled every 256px.
+   All sit above the content but ignore clicks, so they also work when a page paints its own bg-canvas wrapper.
+   Tune --glow-opacity, --cloud-opacity and --noise-opacity above: 0 turns a layer off. */
+html::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 68;
+  pointer-events: none;
+  background-image:
+    radial-gradient(60% 50% at 8% 0%, rgb(var(--color-fg) / var(--glow-opacity)), transparent 70%),
+    radial-gradient(55% 45% at 100% 100%, rgb(var(--color-fg) / var(--glow-opacity)), transparent 70%);
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 69;
+  pointer-events: none;
+  opacity: var(--cloud-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1024' height='1024'%3E%3Cfilter id='c' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.0045 0.0075' numOctaves='3' seed='11' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='2.2' intercept='-0.6'/%3E%3CfeFuncG type='linear' slope='2.2' intercept='-0.6'/%3E%3CfeFuncB type='linear' slope='2.2' intercept='-0.6'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23c)'/%3E%3C/svg%3E");
+  background-size: 1024px 1024px;
+}
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  pointer-events: none;
+  opacity: var(--noise-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='g' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='1.7' intercept='-0.35'/%3E%3CfeFuncG type='linear' slope='1.7' intercept='-0.35'/%3E%3CfeFuncB type='linear' slope='1.7' intercept='-0.35'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  background-size: 256px 256px;
+}
+
+@media (prefers-contrast: more) {
+  html::before,
+  body::before,
+  body::after {
+    display: none;
+  }
+}
