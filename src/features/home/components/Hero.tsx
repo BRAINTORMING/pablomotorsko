@@ -1,7 +1,7 @@
 import { Button } from '../../../components/ui';
 import { useLang } from '../../../i18n';
 import { HeroBackground } from './HeroBackground';
-import logo from '@/assets/g9-auto-traders.jpg';
+import logo from '@/assets/g9-auto-traders.png';
 
 export function Hero() {
   const { d } = useLang();
@@ -18,15 +18,13 @@ export function Hero() {
       <div className="relative z-20 mx-auto w-full max-w-7xl px-4 pt-10 pb-14 sm:px-6 lg:px-8 lg:pt-16 lg:pb-24">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
           <div className="max-w-xl">
-            {/* Logo grande sobre un panel blanco: el logo es oscuro y necesita fondo claro para verse sobre el hero. */}
-            <div className="mb-8 inline-block rounded-3xl bg-white p-3 shadow-2xl shadow-black/40 ring-1 ring-white/20 sm:p-4">
-              <img
-                src={logo}
-                alt="G9 Auto Traders · Chile | Korea"
-                className="block h-32 w-auto sm:h-40 lg:h-48"
-                fetchPriority="high"
-              />
-            </div>
+            {/* Logo grande directamente sobre el fondo del hero (PNG con fondo transparente). */}
+            <img
+              src={logo}
+              alt="G9 Auto Traders · Chile | Korea"
+              className="mb-8 block h-32 w-auto sm:h-40 lg:h-48"
+              fetchPriority="high"
+            />
             <h1 className="text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl mb-4 leading-[1.05] text-balance">
               {d.hero.title1}<br />{d.hero.title2} <span className="bg-gradient-to-r from-cyan-300 to-cyan-500 bg-clip-text text-transparent">{d.hero.title3}</span>
             </h1>
