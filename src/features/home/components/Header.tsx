@@ -1,4 +1,4 @@
-import g9Logo from '@/assets/g9-auto-traders.jpg';
+import g9Logo from '@/assets/g9-auto-traders.png';
 import { LANGS, useLang } from '../../../i18n';
 import { cn } from '../../../lib/cn';
 
@@ -49,9 +49,7 @@ export function Header() {
           </nav>
         </div>
         <a href="#inicio" className="shrink-0 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-info">
-          <span className="block rounded-lg bg-white px-1.5 py-0.5">
-            <img src={g9Logo} alt="G9 Auto Traders" className="block h-11 w-auto" />
-          </span>
+          <img src={g9Logo} alt="G9 Auto Traders" className="block h-11 w-auto" />
         </a>
       </div>
     </header>
